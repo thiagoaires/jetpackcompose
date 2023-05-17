@@ -1,6 +1,5 @@
 package com.thiagoaires.aluvery.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -29,16 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.thiagoaires.aluvery.R
 import com.thiagoaires.aluvery.extension.toBRL
 import com.thiagoaires.aluvery.model.Product
-import com.thiagoaires.aluvery.ui.theme.Purple500
-import com.thiagoaires.aluvery.ui.theme.Teal200
 import java.math.BigDecimal
 
 @Composable
-fun ProductItem(product: Product) {
-    Surface(shape = RoundedCornerShape(15.dp), elevation = 4.dp) {
+fun ProductItem(product: Product, modifier: Modifier = Modifier) {
+    Surface(shape = RoundedCornerShape(15.dp), elevation = 4.dp, modifier = modifier) {
         Column(
             modifier = Modifier
                 .heightIn(min = 250.dp, max = 300.dp)
@@ -50,24 +48,25 @@ fun ProductItem(product: Product) {
                     .background(
                         brush = Brush.horizontalGradient(
                             listOf(
-                                Purple500, Teal200
+                                MaterialTheme.colors.primary, MaterialTheme.colors.secondary
                             )
                         )
                     )
                     .height(imageSize)
                     .fillMaxWidth()
             ) {
-                Image(
-                    painter = painterResource(id = product.image),
-                    contentScale = ContentScale.Crop,
+                AsyncImage(
+                    model = product.image,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(imageSize)
                         .offset(y = imageSize / 2)
                         .clip(CircleShape)
                         .align(Alignment.BottomCenter)
-
+                        .width(imageSize),
+                    placeholder = painterResource(R.drawable.placeholder),
+                    contentScale = ContentScale.Crop,
                 )
+
             }
             Spacer(modifier = Modifier.height(imageSize / 2))
             Column(
@@ -97,8 +96,8 @@ private fun ProductItemPreview() {
     ProductItem(
         Product(
             name = LoremIpsum(38).values.first(),
-            image = R.drawable.burger,
-            price = BigDecimal("12.40")
+            price = BigDecimal("14.99"),
+            image = null
         )
     )
 }
